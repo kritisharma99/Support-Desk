@@ -1,6 +1,8 @@
 
 const bcrypt = require("bcryptjs")
 const User = require("../models/User")
+const JWT = require("jsonwebtoken")
+
  /*********************************************
  * @registerUser a function handles sign up activity
  * @route /api/user/
@@ -41,8 +43,12 @@ const registerUser = async(req,res)=>{
             name: (await user).name,
             email: (await user).email,
             //token
+            token: generateToken((await user).id),
             message: "User successfully created"
         })
+    }else{
+        res.status(400)
+        throw new Error("User not created!")
     }
 }
  /*********************************************
@@ -52,10 +58,60 @@ const registerUser = async(req,res)=>{
  * @Access Public
  ********************************************/
 const loginUser = async(req,res)=>{
-    res.send("Login Route!!")
+    const {email,password} = req.body
+
+    if(!email || !password){
+        res.status(400)
+        throw new Error("please enter email and password!")
+    }
+    //check user exixts or not
+    const user = await User.findOne({email})
+
+    if(user && (await bcrypt.compare(password,user.password)) ){
+        //match password
+        res.status(200).json({
+            _id:(await user).id,
+            name: (await user).name,
+            email: (await user).email,
+            //token
+            token: generateToken((await user).id),
+            message: "User data correct"
+        })
+        //create token
+    }
+    else{
+        res.status(400)
+        throw new Error("Invalid credentials!")
+    }
+}
+ /*********************************************
+ * @dashboard a function display information of respective user
+ * @route /api/user/dashboard
+ * @description
+ * @Access Public
+ ********************************************/
+
+ const dashboard = async(req,res)=>{
+     //By this way we get only required details of requested user
+     user = {
+         email : req.user.email,
+         name: req.user.name
+     }
+    res.status(200).send(user)
+ }
+
+
+
+//Generate Token
+const generateToken =(id)=>{
+    return JWT.sign({id},process.env.JWT_SECRET,{
+        expiresIn:"30d",
+    })
 }
 
 module.exports = {
     registerUser,
-    loginUser}
+    loginUser,
+    dashboard
+}
     
