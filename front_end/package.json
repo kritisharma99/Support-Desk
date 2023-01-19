@@ -1,7 +1,7 @@
 {
-  "name": "frontend",
+  "name": "front_end",
   "version": "0.1.0",
-  "proxy":"http://localhost:5000",
+  "proxy":"http://127.0.0.1:5000",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
@@ -12,7 +12,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
-    "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.2",
     "react-scripts": "5.0.1",

@@ -2,12 +2,15 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
+import axios from 'axios';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
+
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_API
 
 root.render(
   <React.StrictMode>
