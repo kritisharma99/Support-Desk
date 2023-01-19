@@ -5,7 +5,7 @@ import authService from "./authService"
 //get user from local storage
 const user = JSON.parse(localStorage.getItem('user'))
 const initialState ={
-    user:null,
+    user:user ? user : null,
     // user:"Kriti",
     isError:false,
     isSuccess:false,
@@ -28,6 +28,11 @@ export const register =createAsyncThunk('auth/register',async(user,thunkAPI)=>{
 
 export const login =createAsyncThunk('auth/login',async(user,thunkAPI)=>{
     console.log(user)
+})
+
+//logout user
+export const logout = createAsyncThunk('auth/login',async ()=>{
+    await authService.logout()
 })
 
 
@@ -61,6 +66,9 @@ export const authSlice = createSlice({
             //this data come from message payload loine no. 21
             state.message = action.payload
             state.user = null
+        })
+        .addCase(logout.fulfilled,(state)=>{
+            state.user=null
         })
     }
 })
